@@ -3,6 +3,7 @@ const { SESSIONS } = require("../configs/data");
 const { validateBook } = require("../utils/validators");
 
 const bookController = {
+  // GET list of books that are not deleted.
   getAllBooks: (req, res) => {
     Book.getAll((err, results) => {
       if (err) return res.status(500).json({ error: err.message });
@@ -10,6 +11,7 @@ const bookController = {
     });
   },
 
+  // POST a new book; 400 if the data is invalid, 201 when created.
   createBook: (req, res) => {
     try {
       validateBook(req.body);
@@ -22,6 +24,7 @@ const bookController = {
     });
   },
 
+  // DELETE (soft) a book; 404 if missing.
   deleteBook: (req, res) => {
     Book.softDelete(Number(req.params.id), (err, result) => {
       if (err) return res.status(500).json({ error: err.message });
@@ -30,6 +33,7 @@ const bookController = {
     });
   },
 
+  // POST borrow a book: 404 if missing, 409 if no copies left, else copies - 1.
   borrowBook: (req, res) => {
     Book.borrow(Number(req.params.id), (err, result) => {
       if (err) return res.status(500).json({ error: err.message });

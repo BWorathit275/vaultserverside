@@ -7,18 +7,22 @@ const products = [
 ];
 
 const Product = {
+  // Get products not deleted whose name contains the keyword (all if empty).
   getAll: (keyword, callback) => {
     const term = (keyword || "").toLowerCase();
     callback(null, products.filter((p) => p.is_deleted === 0 && p.name.toLowerCase().includes(term)));
   },
+  // Find one product by id (undefined if missing or deleted).
   getById: (id, callback) => {
     callback(null, products.find((p) => p.id === id && p.is_deleted === 0));
   },
+  // Add a new product with the next id and return it.
   create: ({ name, price, description }, callback) => {
     const product = { id: nextId++, name, price, description, is_deleted: 0 };
     products.push(product);
     callback(null, product);
   },
+  // Mark a product as deleted; affectedRows 0 if not found.
   softDelete: (id, callback) => {
     const product = products.find((p) => p.id === id && p.is_deleted === 0);
     if (!product) return callback(null, { affectedRows: 0 });

@@ -7,6 +7,7 @@ const { validateUsername, validatePassword } = require("../utils/validators");
 const COOKIE_OPTIONS = { secure: true, httpOnly: true, sameSite: "lax" };
 
 const authController = {
+  // POST register: validate, reject duplicates (409), hash the password, create the user (201).
   register: async (req, res) => {
     const { username, password, role } = req.body;
     if (!validateUsername(username)) return res.status(400).json({ error: "Invalid username" });
@@ -21,6 +22,7 @@ const authController = {
     }
   },
 
+  // POST login: check the password with bcrypt; on success start a session cookie, on failure clear it (401).
   login: async (req, res) => {
     const user = User.findByUsername(req.body.username);
     try {
@@ -38,12 +40,14 @@ const authController = {
     }
   },
 
+  // POST logout: delete the server session and clear the cookie.
   logout: (req, res) => {
     SESSIONS.delete(req.cookies.sessionId);
     res.clearCookie("sessionId", COOKIE_OPTIONS);
     res.json({ message: "Logged out" });
   },
 
+  // GET me: return the logged-in user (set by requireLogin).
   me: (req, res) => {
     res.json(req.user); // set by requireLogin
   },

@@ -16,18 +16,22 @@ const SESSIONS = new Map(); // sessionId -> user
 
 const COOKIE_OPTIONS = { secure: true, httpOnly: true, sameSite: "none" };
 
+// Log in: unknown user -> clear old session + 401; known user -> new session cookie.
 app.post("/login", (req, res) => {
   // TODO
 });
 
+// Return the logged-in user's name and role, or 401.
 app.get("/me", (req, res) => {
   // TODO
 });
 
+// Admin-only data: 401 if not logged in, 403 if not Admin.
 app.get("/adminData", (req, res) => {
   // TODO
 });
 
+// Log out: delete the server session and clear the cookie.
 app.post("/logout", (req, res) => {
   // TODO
 });

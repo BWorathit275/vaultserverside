@@ -1,6 +1,7 @@
 const Category = require("../models/categoryModel");
 
 const categoryController = {
+  // GET all categories.
   getAllCategories: (req, res) => {
     Category.getAll((err, results) => {
       if (err) return res.status(500).json({ error: err.message });

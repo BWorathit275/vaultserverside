@@ -1,3 +1,4 @@
+// Return the shipping fee (40/60/100 baht) for a weight; throws for invalid weights.
 function calculateShipping(weightKg) {
   if (typeof weightKg !== "number" || Number.isNaN(weightKg)) {
     throw new TypeError("Weight must be a number");
