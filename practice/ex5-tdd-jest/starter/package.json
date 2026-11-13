@@ -1,0 +1,6 @@
+{
+  "name": "ex5-tdd-jest",
+  "version": "1.0.0",
+  "scripts": { "test": "jest" },
+  "devDependencies": { "jest": "^29.7.0" }
+}

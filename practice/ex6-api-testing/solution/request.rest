@@ -1,0 +1,84 @@
+@base = http://localhost:3000
+@user1 = Basic dXNlcjE6MTIzNDU=
+@user2 = Basic dXNlcjI6MTIzNDU=
+
+### T1 Who am I (user1) -> 200 {"username":"user1"}
+GET {{base}}/user/me
+Authorization: {{user1}}
+
+### T2 No credentials -> 401
+GET {{base}}/tasks
+
+### T3 Wrong password -> 401
+GET {{base}}/tasks
+Authorization: Basic dXNlcjE6d3Jvbmc=
+
+### T4 All tasks -> 200, 3 tasks
+GET {{base}}/tasks
+Authorization: {{user1}}
+
+### T5 Filter by status (query string, %20 = space) -> only task 1
+GET {{base}}/tasks?status=In%20Progress
+Authorization: {{user1}}
+
+### T6 Search -> only task 1
+GET {{base}}/tasks?search=Keep
+Authorization: {{user1}}
+
+### T7 Task by id -> 200
+GET {{base}}/tasks/2
+Authorization: {{user1}}
+
+### T8 Missing id -> expected 404   (BUG 1: 500)
+GET {{base}}/tasks/999
+Authorization: {{user1}}
+
+### T9 Create -> 201, owner user1
+POST {{base}}/tasks
+Authorization: {{user1}}
+Content-Type: application/json
+
+{ "title": "Practise curl", "status": "Draft" }
+
+### T10 Create without title -> 400
+POST {{base}}/tasks
+Authorization: {{user1}}
+Content-Type: application/json
+
+{ "status": "Draft" }
+
+### T11 Create with a number title -> expected 400   (BUG 2: 500)
+POST {{base}}/tasks
+Authorization: {{user1}}
+Content-Type: application/json
+
+{ "title": 123 }
+
+### T12 Update own task: status only -> expected title unchanged   (BUG 3: title wiped)
+PUT {{base}}/tasks/2
+Authorization: {{user1}}
+Content-Type: application/json
+
+{ "status": "In Progress" }
+
+### T13 Id in body is ignored -> id stays 2
+PUT {{base}}/tasks/2
+Authorization: {{user1}}
+Content-Type: application/json
+
+{ "id": 100, "title": "Write API test plan", "status": "Done" }
+
+### T14 user2 edits user1's task -> 403
+PUT {{base}}/tasks/2
+Authorization: {{user2}}
+Content-Type: application/json
+
+{ "title": "hacked" }
+
+### T15 user2 deletes user1's task -> expected 403   (BUG 4: 200, task deleted)
+DELETE {{base}}/tasks/2
+Authorization: {{user2}}
+
+### T16 Delete missing task -> 404
+DELETE {{base}}/tasks/999
+Authorization: {{user1}}
