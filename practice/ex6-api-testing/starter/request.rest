@@ -1,0 +1,10 @@
+@base = http://localhost:3000
+# Basic base64("user1:12345") -> fill in yourself (Task 1)
+@user1 = Basic ???
+@user2 = Basic ???
+
+### Who am I (user1)
+GET {{base}}/user/me
+Authorization: {{user1}}
+
+### TODO: add your test cases below, one per ###

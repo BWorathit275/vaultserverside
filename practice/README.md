@@ -9,6 +9,10 @@ Timed exercises modelled on the labs in the slides. Do each one from the
 | 2 | Refactor a books API into MVC + EJS view | MVC, EJS | 40 min |
 | 3 | Session-cookie login with roles (401/403) | Cookies | 30 min |
 | 4 | Register / login with bcrypt | Password hashing | 20 min |
+| 5 | TDD: validateScore, BMI, isPalindrome, canAccessAdmin | Jest (TDD, matchers) | 30 min |
+| 6 | Find 4 planted bugs in a Tasks API (Basic Auth, curl, test plan, bug report) | API Testing | 40 min |
+
+Plus **`theory-questions.md`**: ~45 short questions on every slide topic, with an answer key at the bottom.
 
 ## How to run each exercise
 
