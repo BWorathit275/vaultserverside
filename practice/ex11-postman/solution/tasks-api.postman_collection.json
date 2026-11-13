@@ -1,0 +1,448 @@
+{
+  "info": {
+    "name": "Tasks API tests (solution)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "Run against practice/ex6-api-testing (solution = all pass; starter = the 4 bugs fail)."
+  },
+  "auth": {
+    "type": "basic",
+    "basic": [
+      {
+        "key": "username",
+        "value": "{{username}}",
+        "type": "string"
+      },
+      {
+        "key": "password",
+        "value": "{{password}}",
+        "type": "string"
+      }
+    ]
+  },
+  "item": [
+    {
+      "name": "01 Who am I (user1)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/user/me",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "user",
+            "me"
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code is 200\", () => {",
+              "  pm.response.to.have.status(200);",
+              "});",
+              "pm.test(\"Logged in as user1\", () => {",
+              "  pm.expect(pm.response.json().username).to.eql(\"user1\");",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "02 No credentials -> 401",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/tasks",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "tasks"
+          ]
+        },
+        "auth": {
+          "type": "noauth"
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code is 401\", () => {",
+              "  pm.response.to.have.status(401);",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "03 All tasks",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/tasks",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "tasks"
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code is 200\", () => {",
+              "  pm.response.to.have.status(200);",
+              "});",
+              "pm.test(\"Returns an array with at least 3 tasks\", () => {",
+              "  const data = pm.response.json();",
+              "  pm.expect(data).to.be.an(\"array\");",
+              "  pm.expect(data.length).to.be.at.least(3);",
+              "});",
+              "pm.test(\"Response time is below 500ms\", () => {",
+              "  pm.expect(pm.response.responseTime).to.be.below(500);",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "04 Filter by status (query string)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/tasks?status=In Progress",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "tasks"
+          ],
+          "query": [
+            {
+              "key": "status",
+              "value": "In Progress"
+            }
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Every task is In Progress\", () => {",
+              "  const data = pm.response.json();",
+              "  pm.expect(data.length).to.be.above(0);",
+              "  data.forEach((task) => pm.expect(task.status).to.eql(\"In Progress\"));",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "05 Missing task -> 404",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/tasks/999",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "tasks",
+            "999"
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code is 404 (not 500)\", () => {",
+              "  pm.response.to.have.status(404);",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "06 Create task (save id)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/tasks",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "tasks"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"Practise Postman\",\n  \"status\": \"Draft\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code is 201\", () => {",
+              "  pm.response.to.have.status(201);",
+              "});",
+              "pm.test(\"Owner is the logged-in user\", () => {",
+              "  pm.expect(pm.response.json().owner).to.eql(pm.environment.get(\"username\"));",
+              "});",
+              "// Save the new id for the next requests: {{taskId}}",
+              "pm.collectionVariables.set(\"taskId\", pm.response.json().id);"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "07 Get created task",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/tasks/{{taskId}}",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "tasks",
+            "{{taskId}}"
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code is 200\", () => {",
+              "  pm.response.to.have.status(200);",
+              "});",
+              "pm.test(\"Title is correct\", () => {",
+              "  pm.expect(pm.response.json().title).to.eql(\"Practise Postman\");",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "08 Create with number title -> 400",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/tasks",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "tasks"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": 123\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code is 400 (not 500)\", () => {",
+              "  pm.response.to.have.status(400);",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "09 Update status only (title must stay)",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/tasks/{{taskId}}",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "tasks",
+            "{{taskId}}"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"status\": \"In Progress\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code is 200\", () => {",
+              "  pm.response.to.have.status(200);",
+              "});",
+              "pm.test(\"Status changed\", () => {",
+              "  pm.expect(pm.response.json().status).to.eql(\"In Progress\");",
+              "});",
+              "pm.test(\"Title unchanged\", () => {",
+              "  pm.expect(pm.response.json().title).to.eql(\"Practise Postman\");",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "10 user2 deletes user1's task -> 403",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/tasks/{{taskId}}",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "tasks",
+            "{{taskId}}"
+          ]
+        },
+        "auth": {
+          "type": "basic",
+          "basic": [
+            {
+              "key": "username",
+              "value": "user2",
+              "type": "string"
+            },
+            {
+              "key": "password",
+              "value": "12345",
+              "type": "string"
+            }
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code is 403\", () => {",
+              "  pm.response.to.have.status(403);",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "11 user1 deletes own task",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/tasks/{{taskId}}",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "tasks",
+            "{{taskId}}"
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code is 200\", () => {",
+              "  pm.response.to.have.status(200);",
+              "});"
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "taskId",
+      "value": ""
+    }
+  ]
+}

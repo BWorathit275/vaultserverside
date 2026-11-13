@@ -1,0 +1,14 @@
+<%- include('partials/header', { title }) %>
+<h1><%= product.name %></h1>
+<p><b>Price:</b> <%= product.price.toLocaleString() %> บาท</p>
+<% if (product.description) { %>
+  <p><%= product.description %></p>
+<% } else { %>
+  <p><i>No description</i></p>
+<% } %>
+
+<form method="POST" action="/products/<%= product.id %>/delete">
+  <button type="submit">Delete</button>
+</form>
+<p><a href="/products">Back to list</a></p>
+<%- include('partials/footer') %>

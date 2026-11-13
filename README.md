@@ -9,9 +9,13 @@ Study material for the exam topics: **Unit Testing with Jest**, **API Testing**,
 |---|---|
 | `cheatsheets/Exam_CheatSheet_TH.pdf` | Full Thai summary of every slide (technical terms in English), tools, and "beyond the slides" notes — 20 pages with contents page |
 | `cheatsheets/Exam_CheatSheet.pdf` | Compact English summary — 6 pages |
-| `practice/` | 8 timed practice exercises (7 and 8 mix all topics), each with `starter/` and `solution/` — see [practice/README.md](practice/README.md) |
+| `practice/` | 12 timed practice exercises (7 and 8 mix all topics), each with `starter/` and `solution/` — see [practice/README.md](practice/README.md) |
 | `practice/theory-questions.md` | ~45 theory questions on all slide topics, with answer key |
+| `practice/worksheet-test-cases.md` | Write positive / negative / boundary test tables, with answers |
+| `practice/manual-drills.md` | DevTools cookies & network, npm, curl, spot-the-error drills |
 | `practice/snippets.md` | Copy-paste code patterns: Jest, Express MVC, EJS, cookies/sessions, bcrypt, REST Client, Postman, curl |
+
+See [practice/README.md](practice/README.md) for a **coverage map** of every slide topic.
 
 ## Practice exercises
 
@@ -25,6 +29,10 @@ Study material for the exam topics: **Unit Testing with Jest**, **API Testing**,
 | 6 | API testing: find 4 planted bugs (Basic Auth, curl, test plan) | 40 min |
 | 7 | **Mixed — full exam simulation**: Library app (MVC, bcrypt, session roles, EJS, Jest, REST Client) | 75 min |
 | 8 | **Mixed — code review & fix**: 9 bugs across all topics | 45 min |
+| 9 | Extend the real lab setup (Docker MySQL, mysql2, .env): filter, sort, paging, JOIN, stats | 60 min |
+| 10 | EJS partials, detail page and HTML forms | 40 min |
+| 11 | Postman: variables, auth, test scripts, Collection Runner | 35 min |
+| 12 | Jest + supertest route tests (beyond the slides) | 25 min |
 
 ```bash
 cd practice/ex1-jest/starter

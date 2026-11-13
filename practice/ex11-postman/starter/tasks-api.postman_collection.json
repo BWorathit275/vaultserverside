@@ -1,0 +1,290 @@
+{
+  "info": {
+    "name": "Tasks API tests (starter)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "Run against practice/ex6-api-testing (solution = all pass; starter = the 4 bugs fail)."
+  },
+  "auth": {
+    "type": "basic",
+    "basic": [
+      {
+        "key": "username",
+        "value": "{{username}}",
+        "type": "string"
+      },
+      {
+        "key": "password",
+        "value": "{{password}}",
+        "type": "string"
+      }
+    ]
+  },
+  "item": [
+    {
+      "name": "01 Who am I (user1)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/user/me",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "user",
+            "me"
+          ]
+        }
+      }
+    },
+    {
+      "name": "02 No credentials -> 401",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/tasks",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "tasks"
+          ]
+        },
+        "auth": {
+          "type": "noauth"
+        }
+      }
+    },
+    {
+      "name": "03 All tasks",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/tasks",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "tasks"
+          ]
+        }
+      }
+    },
+    {
+      "name": "04 Filter by status (query string)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/tasks?status=In Progress",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "tasks"
+          ],
+          "query": [
+            {
+              "key": "status",
+              "value": "In Progress"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "05 Missing task -> 404",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/tasks/999",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "tasks",
+            "999"
+          ]
+        }
+      }
+    },
+    {
+      "name": "06 Create task (save id)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/tasks",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "tasks"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"Practise Postman\",\n  \"status\": \"Draft\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "// TODO: test 201 and owner, then save the id:",
+              "pm.collectionVariables.set(\"taskId\", pm.response.json().id);"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "07 Get created task",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/tasks/{{taskId}}",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "tasks",
+            "{{taskId}}"
+          ]
+        }
+      }
+    },
+    {
+      "name": "08 Create with number title -> 400",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/tasks",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "tasks"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": 123\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "09 Update status only (title must stay)",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/tasks/{{taskId}}",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "tasks",
+            "{{taskId}}"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"status\": \"In Progress\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "10 user2 deletes user1's task -> 403",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/tasks/{{taskId}}",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "tasks",
+            "{{taskId}}"
+          ]
+        },
+        "auth": {
+          "type": "basic",
+          "basic": [
+            {
+              "key": "username",
+              "value": "user2",
+              "type": "string"
+            },
+            {
+              "key": "password",
+              "value": "12345",
+              "type": "string"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "11 user1 deletes own task",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/tasks/{{taskId}}",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "tasks",
+            "{{taskId}}"
+          ]
+        }
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "taskId",
+      "value": ""
+    }
+  ]
+}
