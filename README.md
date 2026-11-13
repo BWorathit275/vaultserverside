@@ -26,3 +26,12 @@ cd practice/ex1-jest/starter
 npm install
 npm test
 ```
+
+
+Jest matchers: jestjs.io/docs/expect and jestjs.io/docs/using-matchers
+Jest async: jestjs.io/docs/asynchronous
+Express routing and res.cookie: expressjs.com (Guide → Routing, and the API reference for res.cookie and res.clearCookie)
+EJS tags: ejs.co
+bcrypt: npmjs.com/package/bcrypt
+Cookies and status codes: MDN, “Using HTTP cookies” and “HTTP response status codes”
+Postman tests: learning.postman.com, “test script examples”
