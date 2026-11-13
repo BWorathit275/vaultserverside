@@ -1,0 +1,6 @@
+{
+  "name": "ex2-mvc",
+  "version": "1.0.0",
+  "scripts": { "start": "node index.js", "dev": "node --watch index.js" },
+  "dependencies": { "express": "^4.21.2" }
+}
