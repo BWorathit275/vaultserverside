@@ -11,6 +11,10 @@ Timed exercises modelled on the labs in the slides. Do each one from the
 | 4 | Register / login with bcrypt | Password hashing | 20 min |
 | 5 | TDD: validateScore, BMI, isPalindrome, canAccessAdmin | Jest (TDD, matchers) | 30 min |
 | 6 | Find 4 planted bugs in a Tasks API (Basic Auth, curl, test plan, bug report) | API Testing | 40 min |
+| 7 | **Full exam simulation**: Library app — MVC + bcrypt + session roles + EJS + Jest + REST Client | **All topics** | 75 min |
+| 8 | **Code review & fix**: 9 bugs across Jest, API, bcrypt, cookies, 401/403 and EJS | **All topics** | 45 min |
+
+Exercises 7 and 8 mix every topic — the most exam-like. Do them last, timed.
 
 Plus **`theory-questions.md`**: ~45 short questions on every slide topic, with an answer key at the bottom.
 

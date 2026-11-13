@@ -9,7 +9,7 @@ Study material for the exam topics: **Unit Testing with Jest**, **API Testing**,
 |---|---|
 | `cheatsheets/Exam_CheatSheet_TH.pdf` | Full Thai summary of every slide (technical terms in English), tools, and "beyond the slides" notes — 20 pages with contents page |
 | `cheatsheets/Exam_CheatSheet.pdf` | Compact English summary — 6 pages |
-| `practice/` | 6 timed practice exercises, each with `starter/` and `solution/` — see [practice/README.md](practice/README.md) |
+| `practice/` | 8 timed practice exercises (7 and 8 mix all topics), each with `starter/` and `solution/` — see [practice/README.md](practice/README.md) |
 | `practice/theory-questions.md` | ~45 theory questions on all slide topics, with answer key |
 | `practice/snippets.md` | Copy-paste code patterns: Jest, Express MVC, EJS, cookies/sessions, bcrypt, REST Client, Postman, curl |
 
@@ -23,6 +23,8 @@ Study material for the exam topics: **Unit Testing with Jest**, **API Testing**,
 | 4 | Register / login with bcrypt | 20 min |
 | 5 | TDD with Jest (functions from the slides) | 30 min |
 | 6 | API testing: find 4 planted bugs (Basic Auth, curl, test plan) | 40 min |
+| 7 | **Mixed — full exam simulation**: Library app (MVC, bcrypt, session roles, EJS, Jest, REST Client) | 75 min |
+| 8 | **Mixed — code review & fix**: 9 bugs across all topics | 45 min |
 
 ```bash
 cd practice/ex1-jest/starter

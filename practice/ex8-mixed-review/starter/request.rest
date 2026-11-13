@@ -1,0 +1,49 @@
+@base = http://localhost:3000
+
+### Register first user (becomes admin)
+POST {{base}}/api/register
+Content-Type: application/json
+
+{ "username": "admin", "password": "adminpass1", "age": 30 }
+
+### Register bob
+POST {{base}}/api/register
+Content-Type: application/json
+
+{ "username": "bob", "password": "bobpass12", "age": 20 }
+
+### Register exactly 18 (should be allowed)
+POST {{base}}/api/register
+Content-Type: application/json
+
+{ "username": "teen", "password": "teenpass1", "age": 18 }
+
+### List users (look at what comes back)
+GET {{base}}/api/users
+
+### Login bob with the WRONG password (should be 401)
+POST {{base}}/api/login
+Content-Type: application/json
+
+{ "username": "bob", "password": "WRONG" }
+
+### Login bob
+POST {{base}}/api/login
+Content-Type: application/json
+
+{ "username": "bob", "password": "bobpass12" }
+
+### Admin stats as bob (not admin)
+GET {{base}}/api/admin/stats
+
+### Update profile without bio
+PUT {{base}}/api/profile
+Content-Type: application/json
+
+{}
+
+### Bio with a script tag, then open http://localhost:3000/profile/bob in the browser
+PUT {{base}}/api/profile
+Content-Type: application/json
+
+{ "bio": "<script>alert('XSS')</script>" }

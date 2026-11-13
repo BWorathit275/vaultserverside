@@ -1,0 +1,4 @@
+body { font-family: sans-serif; margin: 24px; }
+table { border-collapse: collapse; }
+th, td { border: 1px solid #ccc; padding: 6px 10px; }
+tr.out td { color: #999; }

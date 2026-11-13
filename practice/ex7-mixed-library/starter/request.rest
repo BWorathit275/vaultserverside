@@ -1,0 +1,88 @@
+@base = http://localhost:3000/api
+
+### Public book list
+GET {{base}}/books
+
+### Add book without login -> 401
+POST {{base}}/books
+Content-Type: application/json
+
+{ "title": "X", "copies": 1 }
+
+### Register member
+POST {{base}}/auth/register
+Content-Type: application/json
+
+{ "username": "ann_01", "password": "abcdefg1" }
+
+### Register again -> 409
+POST {{base}}/auth/register
+Content-Type: application/json
+
+{ "username": "ann_01", "password": "abcdefg1" }
+
+### Register with weak password -> 400
+POST {{base}}/auth/register
+Content-Type: application/json
+
+{ "username": "bob_01", "password": "short" }
+
+### Register librarian
+POST {{base}}/auth/register
+Content-Type: application/json
+
+{ "username": "lib_01", "password": "secret123", "role": "librarian" }
+
+### Login wrong password -> 401
+POST {{base}}/auth/login
+Content-Type: application/json
+
+{ "username": "ann_01", "password": "nope" }
+
+### Login member (REST Client stores the cookie)
+POST {{base}}/auth/login
+Content-Type: application/json
+
+{ "username": "ann_01", "password": "abcdefg1" }
+
+### Who am I
+GET {{base}}/auth/me
+
+### Member adds a book -> 403
+POST {{base}}/books
+Content-Type: application/json
+
+{ "title": "X", "copies": 1 }
+
+### Member borrows book 2 -> 200
+POST {{base}}/books/2/borrow
+
+### Borrow book 2 again -> 409 (no copies left)
+POST {{base}}/books/2/borrow
+
+### Login librarian
+POST {{base}}/auth/login
+Content-Type: application/json
+
+{ "username": "lib_01", "password": "secret123" }
+
+### Librarian adds a book with 51 copies -> 400
+POST {{base}}/books
+Content-Type: application/json
+
+{ "title": "Bad", "copies": 51 }
+
+### Librarian adds a book -> 201
+POST {{base}}/books
+Content-Type: application/json
+
+{ "title": "Node.js Design Patterns", "author": "Casciaro", "copies": 3 }
+
+### Librarian soft-deletes book 1 -> 200
+DELETE {{base}}/books/1
+
+### Logout
+POST {{base}}/auth/logout
+
+### After logout -> 401
+GET {{base}}/auth/me
