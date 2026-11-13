@@ -11,16 +11,19 @@ function createApp() {
     { id: 2, title: "Refactoring", price: 1200 },
   ];
 
+  // Get all books that are not deleted.
   app.get("/api/books", (req, res) => {
     res.json(books);
   });
 
+  // Get one book by id; 404 if missing.
   app.get("/api/books/:id", (req, res) => {
     const book = books.find((b) => b.id === Number(req.params.id));
     if (!book) return res.status(404).json({ error: "Book not found" });
     res.json(book);
   });
 
+  // Create a book; 400 if title or price is missing.
   app.post("/api/books", (req, res) => {
     const { title, price } = req.body;
     if (typeof title !== "string" || title.trim() === "" || typeof price !== "number" || price <= 0) {
@@ -31,6 +34,7 @@ function createApp() {
     res.status(201).json(book);
   });
 
+  // Soft delete a book; 404 if missing.
   app.delete("/api/books/:id", (req, res) => {
     const index = books.findIndex((b) => b.id === Number(req.params.id));
     if (index === -1) return res.status(404).json({ error: "Book not found" });

@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const productController = require("../controllers/productController");
 
+// Web page: list books as HTML (built with a template string).
 router.get("/", (req, res) => res.redirect("/products"));
 router.get("/products", productController.list);
 router.get("/products/new", productController.newForm); // before /products/:id

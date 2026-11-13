@@ -12,6 +12,7 @@ app.use(cookieParser());
 const users = []; // { username, password, age, role, bio }
 const SESSIONS = new Map();
 
+// Register: validate input and age, reject duplicate names, hash the password.
 app.post("/api/register", async (req, res) => {
   const { username, password, age } = req.body;
   if (!username || !password) return res.status(400).send("username and password are required");
@@ -22,10 +23,12 @@ app.post("/api/register", async (req, res) => {
   res.status(201).send("Registered");
 });
 
+// List users.
 app.get("/api/users", (req, res) => {
   res.json(users);
 });
 
+// Log in with username + password and start a session.
 app.post("/api/login", async (req, res) => {
   const user = users.find((u) => u.username === req.body.username);
   if (user == null) return res.status(401).send("Invalid username or password");
@@ -39,6 +42,7 @@ app.post("/api/login", async (req, res) => {
   res.status(401).send("Invalid username or password");
 });
 
+// Middleware: load the user from the session cookie, or reply 401 if not logged in.
 function requireLogin(req, res, next) {
   const user = SESSIONS.get(req.cookies.sessionId);
   if (user == null) return res.sendStatus(401);
@@ -46,21 +50,25 @@ function requireLogin(req, res, next) {
   next();
 }
 
+// Middleware: allow only admins.
 function requireAdmin(req, res, next) {
   if (req.cookies.role !== "admin") return res.sendStatus(401);
   next();
 }
 
+// Update the logged-in user's bio.
 app.put("/api/profile", requireLogin, (req, res) => {
   if (!isValidBio(req.body.bio)) return res.status(400).send("Bio too long");
   req.user.bio = req.body.bio.trim();
   res.send("Profile updated");
 });
 
+// Admin-only: number of users and active sessions.
 app.get("/api/admin/stats", requireLogin, requireAdmin, (req, res) => {
   res.json({ users: users.length, sessions: SESSIONS.size });
 });
 
+// Render a user's public profile page (EJS).
 app.get("/profile/:username", (req, res) => {
   const user = users.find((u) => u.username === req.params.username);
   if (!user) return res.status(404).send("Not found");

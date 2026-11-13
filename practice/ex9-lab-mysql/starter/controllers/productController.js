@@ -1,6 +1,7 @@
 const Product = require("../models/productModel");
 
 const productController = {
+  // GET all products that are not deleted.
   getAllProducts: (req, res) => {
     Product.getAll((err, results) => {
       if (err) return res.status(500).json({ error: err.message });
@@ -8,6 +9,7 @@ const productController = {
     });
   },
 
+  // GET one product by id; 404 if missing.
   getProductById: (req, res) => {
     Product.getById(req.params.id, (err, results) => {
       if (err) return res.status(500).json({ error: err.message });
@@ -16,6 +18,7 @@ const productController = {
     });
   },
 
+  // GET products whose name contains :keyword.
   searchProducts: (req, res) => {
     Product.searchByKeyword(req.params.keyword, (err, results) => {
       if (err) return res.status(500).json({ error: err.message });
@@ -23,6 +26,7 @@ const productController = {
     });
   },
 
+  // POST a new product; 400 if name or price is missing, 201 when created.
   createProduct: (req, res) => {
     const { name, price } = req.body;
     if (!name || price == null) return res.status(400).json({ error: "name and price are required" });
@@ -32,6 +36,7 @@ const productController = {
     });
   },
 
+  // DELETE (soft) a product; 404 if missing.
   softDeleteProduct: (req, res) => {
     Product.softDelete(req.params.id, (err, result) => {
       if (err) return res.status(500).json({ error: err.message });
@@ -40,6 +45,7 @@ const productController = {
     });
   },
 
+  // PUT restore a soft-deleted product; 404 if missing.
   restoreProduct: (req, res) => {
     Product.restore(req.params.id, (err, result) => {
       if (err) return res.status(500).json({ error: err.message });

@@ -1,6 +1,7 @@
 const API = "http://localhost:3000";
 const out = document.getElementById("out");
 
+// Print the response status and text into the <pre> on the page.
 function show(res) {
   return res.text().then((text) => (out.textContent = `${res.status}  ${text}`));
 }

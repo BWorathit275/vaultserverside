@@ -6,10 +6,12 @@ app.use(express.json());
 
 const users = [];
 
+// List all users (passwords are stored as hashes).
 app.get("/users", (req, res) => {
   res.json(users);
 });
 
+// Register: hash the password with bcrypt and save the user (201).
 app.post("/users", async (req, res) => {
   const { name, password } = req.body;
   if (!name || !password) {
@@ -28,6 +30,7 @@ app.post("/users", async (req, res) => {
   }
 });
 
+// Log in: find the user, then bcrypt.compare the password.
 app.post("/users/login", async (req, res) => {
   const user = users.find((u) => u.name === req.body.name);
   if (user == null) {

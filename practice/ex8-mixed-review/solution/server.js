@@ -15,6 +15,7 @@ const SESSIONS = new Map();
 // FIX 5: protect the session cookie
 const COOKIE_OPTIONS = { httpOnly: true, secure: true, sameSite: "lax" };
 
+// Register: validate input and age, reject duplicate names, hash the password.
 app.post("/api/register", async (req, res) => {
   const { username, password, age } = req.body;
   if (!username || !password) return res.status(400).send("username and password are required");
@@ -30,6 +31,7 @@ app.get("/api/users", (req, res) => {
   res.json(users.map((u) => ({ username: u.username, role: u.role })));
 });
 
+// Log in with username + password and start a session.
 app.post("/api/login", async (req, res) => {
   const user = users.find((u) => u.username === req.body.username);
   // FIX 3: await the Promise (a Promise object is always truthy)
@@ -46,6 +48,7 @@ app.post("/api/login", async (req, res) => {
   res.send(`Welcome ${user.username}`);
 });
 
+// Middleware: load the user from the session cookie, or reply 401 if not logged in.
 function requireLogin(req, res, next) {
   const user = SESSIONS.get(req.cookies.sessionId);
   if (user == null) return res.sendStatus(401);
@@ -53,6 +56,7 @@ function requireLogin(req, res, next) {
   next();
 }
 
+// Middleware: allow only admins using the server-side role; 403 otherwise.
 function requireAdmin(req, res, next) {
   // FIX 4: read the role from the server-side session, not a cookie the user can edit
   // FIX 7: logged in but not allowed -> 403, not 401
@@ -60,6 +64,7 @@ function requireAdmin(req, res, next) {
   next();
 }
 
+// Update the logged-in user's bio.
 app.put("/api/profile", requireLogin, (req, res) => {
   // FIX 8: bio is optional; only update it when sent (missing bio used to crash with 500)
   if (!isValidBio(req.body.bio)) return res.status(400).send("Bio too long");
@@ -67,10 +72,12 @@ app.put("/api/profile", requireLogin, (req, res) => {
   res.send("Profile updated");
 });
 
+// Admin-only: number of users and active sessions.
 app.get("/api/admin/stats", requireLogin, requireAdmin, (req, res) => {
   res.json({ users: users.length, sessions: SESSIONS.size });
 });
 
+// Render a user's public profile page (EJS).
 app.get("/profile/:username", (req, res) => {
   const user = users.find((u) => u.username === req.params.username);
   if (!user) return res.status(404).send("Not found");

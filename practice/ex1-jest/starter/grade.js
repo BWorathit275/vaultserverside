@@ -6,10 +6,12 @@ function isPassing(score) {
   return score > 50; // <-- something is wrong here. Write a test that proves it.
 }
 
+// Return the students whose score is below 50.
 function getFailedStudents(students) {
   return students.filter((s) => s.score < 50);
 }
 
+// Return just the names of the students who failed.
 function getFailedNames(students) {
   return getFailedStudents(students).map((s) => s.name);
 }
