@@ -1,0 +1,49 @@
+@base = http://localhost:3000/api
+
+### Baseline: all products
+GET {{base}}/products
+
+### T1 price filter -> 4 products (Wool Scarf, Clean Code, JavaScript Basics, Node.js Handbook)
+GET {{base}}/products?min=300&max=1000
+
+### T1 invalid -> 400
+GET {{base}}/products?min=abc
+
+### T1 min > max -> 400
+GET {{base}}/products?min=500&max=100
+
+### T2 sort -> iPhone 17, iPhone 15, Budget Phone
+GET {{base}}/products?sort=price_desc&limit=3
+
+### T2 SQL injection attempt -> 400
+GET {{base}}/products?sort=price;DROP TABLE products
+
+### T3 pagination
+GET {{base}}/products?sort=name&page=2&limit=5
+
+### T3 limit too big -> 400
+GET {{base}}/products?limit=50
+
+### T4 count -> { "total": 12 }
+GET {{base}}/products/count
+
+### T6 stats
+GET {{base}}/products/stats
+
+### T5 categories
+GET {{base}}/categories
+
+### T5 products in "Books" (id 3) -> 4 products
+GET {{base}}/categories/3/products
+
+### T5 missing category -> 404
+GET {{base}}/categories/99/products
+
+### Soft delete product 8, then count -> 11
+DELETE {{base}}/products/8
+
+###
+GET {{base}}/products/count
+
+### Restore product 8
+PUT {{base}}/products/restore/8

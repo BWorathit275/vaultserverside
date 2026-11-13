@@ -1,0 +1,5 @@
+body { font-family: sans-serif; margin: 24px; }
+nav { margin-bottom: 16px; }
+label { display: block; margin: 8px 0; }
+.errors { color: #b00020; }
+footer { margin-top: 32px; color: #777; font-size: 0.9em; }

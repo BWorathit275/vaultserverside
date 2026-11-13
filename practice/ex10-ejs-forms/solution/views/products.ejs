@@ -1,0 +1,21 @@
+<%- include('partials/header', { title }) %>
+<h1>Products</h1>
+
+<form method="GET" action="/products">
+  <input type="text" name="q" value="<%= q %>" placeholder="Search by name">
+  <button type="submit">Search</button>
+</form>
+
+<% if (products.length === 0) { %>
+  <p>No products found<% if (q) { %> for "<%= q %>"<% } %>.</p>
+<% } else { %>
+  <ul>
+    <% products.forEach((product) => { %>
+      <li>
+        <a href="/products/<%= product.id %>"><%= product.name %></a>
+        — <%= product.price.toLocaleString() %> บาท
+      </li>
+    <% }) %>
+  </ul>
+<% } %>
+<%- include('partials/footer') %>
