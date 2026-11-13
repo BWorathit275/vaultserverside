@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Book List</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <h1>Book List</h1>
+  <% if (books.length === 0) { %>
+    <p>No books yet.</p>
+  <% } else { %>
+    <div class="grid">
+      <% books.forEach((book) => { %>
+        <div class="card">
+          <h3><%= book.title %></h3>
+          <p><%= book.author %></p>
+          <p><%= book.price.toLocaleString() %> บาท</p>
+        </div>
+      <% }) %>
+    </div>
+  <% } %>
+</body>
+</html>

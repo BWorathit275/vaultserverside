@@ -1,0 +1,37 @@
+@base = http://localhost:3000/api
+
+### Get all books
+GET {{base}}/books
+
+### Get book by id
+GET {{base}}/books/1
+
+### Missing book -> 404
+GET {{base}}/books/999
+
+### Search
+GET {{base}}/books/search/code
+
+### Create a book
+POST {{base}}/books
+Content-Type: application/json
+
+{ "title": "Refactoring", "author": "Martin Fowler", "price": 1200 }
+
+### Create without price -> 400
+POST {{base}}/books
+Content-Type: application/json
+
+{ "title": "No Price" }
+
+### Update
+PUT {{base}}/books/1
+Content-Type: application/json
+
+{ "title": "Clean Code (2nd ed.)", "author": "Robert C. Martin", "price": 990 }
+
+### Soft delete
+DELETE {{base}}/books/2
+
+### Restore
+PUT {{base}}/books/restore/2
